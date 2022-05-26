@@ -1,0 +1,157 @@
+# cloud-config
+resize_rootfs: true
+
+write_files:
+- content: |
+    vm_number=${vm_number}
+    vm_name=${vm_name}
+    vm_names="${vm_names}"
+    vm_ip=${vm_ip}
+    vm_ips="${vm_ips}"
+    vm_ip_network=${vm_ip_network}
+    vm_swap_size="${vm_swap_size}"
+    vm_os_registration=${vm_os_registration}
+    vm_reg_code="${vm_reg_code}"
+    vm_reg_email="${vm_reg_email}"
+    vm_product_id="${vm_product_id}"
+    vm_saptune_solution="${vm_saptune_solution}"
+    vm_sap_instance="${vm_sap_instance}"
+    admin_password="${admin_password}"
+    sap_media_stg_enabled=${sap_media_stg_enabled}
+    sap_media_stg_type="${sap_media_stg_type}"
+    sap_media_stg_account="${sap_media_stg_account}"
+    sap_media_local_mount="${sap_media_local_mount}"
+    sap_media_stg_remote_path="${sap_media_stg_remote_path}"
+    sap_media_stg_access_key="${sap_media_stg_access_key}"
+    sap_media_local_add_fstab="${sap_media_local_add_fstab}"
+    sap_media_pe_private_ip="${sap_media_pe_private_ip}"
+    data_stg_account="${data_stg_account}"
+    data_stg_remote_path="${data_stg_remote_path}"
+    data_stg_remote_clean="${data_stg_remote_clean}"
+    data_stg_local_add_fstab="${data_stg_local_add_fstab}"
+    data_stg_pe_private_ip="${data_stg_pe_private_ip}"
+    enable_monitoring=${enable_monitoring}
+    cluster_install=${cluster_install}
+    cluster_unicast=${cluster_unicast}
+    cluster_password=${cluster_password}
+    subscription_id=${subscription_id}
+    resource_group=${resource_group}
+    tenant_id=${tenant_id}
+    login_id=${login_id}
+    app_password=${app_password}
+    sap_ascs_instance_sid=${sap_ascs_instance_sid}
+    sap_ascs_instance_id=${sap_ascs_instance_id}
+    sap_ascs_root_user=${sap_ascs_root_user}
+    sap_ascs_root_password=${sap_ascs_root_password}
+    sap_ascs_vip_address=${sap_ascs_vip_address}
+    sap_ascs_vip_hostname=${sap_ascs_vip_hostname}
+    sap_ers_instance_sid=${sap_ers_instance_sid}
+    sap_ers_instance_id=${sap_ers_instance_id}
+    sap_ers_root_user=${sap_ers_root_user}
+    sap_ers_root_password=${sap_ers_root_password}
+    sap_ers_vip_address=${sap_ers_vip_address}
+    sap_ers_vip_hostname=${sap_ers_vip_hostname}
+    sid_adm_password=${sid_adm_password}
+    sap_adm_password=${sap_adm_password}
+    master_password=${master_password}
+    sapmnt_path=${sapmnt_path}
+    sidadm_user_uid=${sidadm_user_uid}
+    sidadm_user_gid=${sidadm_user_gid}
+    sapmnt_inst_media=${sapmnt_inst_media}
+    swpm_folder=${swpm_folder}
+    sapexe_folder=${sapexe_folder}
+    additional_dvds=${additional_dvds}
+    sap_hana_host=${sap_hana_host}
+    sap_hana_ip=${sap_hana_ip}
+    sap_hana_sid=${sap_hana_sid}
+    sap_hana_instance=${sap_hana_instance}
+    sap_hana_password=${sap_hana_password}
+  path: /run/scripts/vars
+  owner: root:root
+  permissions: "0640"
+  append: false
+- encoding: gzip+base64
+  content: |
+    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
+  path: /run/scripts/setup_sap.sh
+  owner: root:root
+  permissions: "0755"
+  append: false
+
+runcmd:
+  - [bash, "/run/scripts/setup_sap.sh"]

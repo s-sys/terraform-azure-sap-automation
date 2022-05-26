@@ -1,0 +1,526 @@
+##################
+# Cloud resources
+##################
+rg_exists       = true
+resource_group  = "RG_SAP_HA"
+location        = "eastus"
+admin_username  = "cloudadmin"
+admin_password  = "MyPassw0rdHere@123"
+
+
+###############
+# Network Vnet
+###############
+vnet_exists   = false
+vnet_name     = "vnet_MyVnet"
+vnet_addr     = "10.10.0.0/16"
+vnet_rg       = "RG_SAP_HA"
+
+
+#################
+# Network Subnet
+#################
+subnet_exists = false
+subnet_name   = "sNET_MysNET"
+subnet_addr   = "10.10.1.0/24"
+
+
+############
+# NSG rules
+############
+nsg_enabled = true
+nsg_exists  = false
+nsg_name    = "nsg"
+nsg_rg      = "RG_SAP_HA"
+nsg_rules   = [
+  { 
+    name                       = "All"
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+    enabled                    = true
+  },
+]
+
+
+###################
+# Availability set
+###################
+availability_set_enabled = true
+availability_set_name    = "as_sap_prod"
+
+
+############################
+# Proximity Placement Group
+############################
+proximity_pg_enabled = true
+proximity_pg_exists  = false
+proximity_pg_name    = "ppg_sap_prod"
+proximity_pg_rg      = "RG_SAP_HA"
+
+
+################################
+# Storage account for SAP Media
+################################
+sap_media_stg_type         = "smb"
+sap_media_stg_exists       = true
+sap_media_stg_account      = "stgamedia"
+sap_media_stg_rg           = "RG-STGA-MEDIA"
+sap_media_stg_access_key   = "ACCESS-KEY-HERE"
+sap_media_stg_remote_path  = "/hanamedia"
+sap_media_local_mount      = "/mnt/sapmedia"
+sap_media_local_add_fstab  = false
+sap_media_stg_pe_enabled   = true
+sap_media_stg_pe_exists    = false
+sap_media_stg_pe_name      = ""
+# For new resource fields below must be filled
+sap_media_stg_tier         = "Standard"
+sap_media_stg_repl         = "LRS"
+sap_media_stg_account_kind = "StorageV2"
+
+
+###########################################
+# Storage account for SAP Application data
+###########################################
+data_stg_enabled         = true
+data_stg_exists          = true
+data_stg_account         = "stgadata"
+data_stg_rg              = "RG-STGA-DATA"
+data_stg_remote_path     = "/sapecp"
+data_stg_remote_clean    = true
+data_stg_local_add_fstab = true
+data_stg_pe_enabled      = true
+data_stg_pe_exists       = false
+data_stg_pe_name         = ""
+# For new resource fields below must be filled
+data_stg_tier            = "Premium"
+data_stg_repl            = "LRS"
+data_stg_account_kind    = "FileStorage"
+
+
+########################################
+# Storage account for SAP saptrans data
+########################################
+saptrans_stg_type            = "stga"
+saptrans_stg_exists          = true
+saptrans_stg_account         = "stgasaptrans"
+saptrans_stg_rg              = "RG-STGA-SAPTRANS"
+saptrans_stg_remote_path     = "/saptrans"
+saptrans_stg_remote_clean    = true
+saptrans_stg_local_add_fstab = true
+saptrans_stg_pe_enabled      = true
+saptrans_stg_pe_exists       = false
+saptrans_stg_pe_name         = ""
+# For new resource fields below must be filled
+saptrans_stg_tier            = "Premium"
+saptrans_stg_repl            = "LRS"
+saptrans_stg_account_kind    = "FileStorage"
+
+
+################################
+# Storage account for instances
+################################
+vm_data_stg_exists       = true
+vm_data_stg_account      = "stgainstance"
+vm_data_stg_rg           = "RG-STGA-INSTANCE"
+# For new resource fields below must be filled
+vm_data_stg_tier         = "Premium"
+vm_data_stg_repl         = "LRS"
+vm_data_stg_account_kind = "BlockBlobStorage"
+
+
+#######################################
+# Storage account for Boot Diagnostics
+#######################################
+boot_diag_stg_enabled      = true
+boot_diag_stg_exists       = true
+boot_diag_stg_account      = "stgabootdiag"
+boot_diag_stg_rg           = "RG-STGA-BOOTDIAG"
+# For new resource fields below must be filled
+boot_diag_stg_tier         = "Standard"
+boot_diag_stg_repl         = "LRS"
+boot_diag_stg_account_kind = "StorageV2"
+
+
+############################
+# Azure Fencing Application
+############################
+fencing_enabled    = true
+fencing_app_exists = false
+fencing_app_name   = "sap_fencing_app_prod"
+fencing_perms_rg   = false
+fencing_app_secret = ""
+
+
+############################
+# Load balancer for cluster
+############################
+lb_create           = true
+lb_create_public_ip = false
+lb_name             = "lb_sap_prod"
+lb_sku              = "Standard"
+# Load Balancing rules and probes
+lb_frontend_ip      = [
+  {
+    name       = "ascs"
+    private_ip = "10.10.1.200"
+  },
+  {
+    name       = "ers"
+    private_ip = "10.10.1.201"
+  },
+]
+lb_probe_rules = [
+  {
+    name             = "ascs"
+    port             = 62001
+    protocol         = "Tcp"
+    interval         = 5
+    number_of_probes = 2
+  },
+  {
+    name             = "ers"
+    port             = 62110
+    protocol         = "Tcp"
+    interval         = 5
+    number_of_probes = 2
+  },
+]
+lb_rules = [
+  {
+    name                    = "port_3201"
+    frontend_name           = "ascs"
+    probe_name              = "ascs"
+    protocol                = "Tcp"
+    frontend_port           = 3201
+    backend_port            = 3201
+    enable_floating_ip      = false
+    idle_timeout_in_minutes = 4
+    load_distribution       = "SourceIPProtocol"
+    enable_tcp_reset        = false
+    disable_outbound_snat   = true
+  },
+  {
+    name                    = "port_3601"
+    frontend_name           = "ascs"
+    probe_name              = "ascs"
+    protocol                = "Tcp"
+    frontend_port           = 3601
+    backend_port            = 3601
+    enable_floating_ip      = false
+    idle_timeout_in_minutes = 4
+    load_distribution       = "SourceIPProtocol"
+    enable_tcp_reset        = false
+    disable_outbound_snat   = true
+  },
+  {
+    name                    = "port_3901"
+    frontend_name           = "ascs"
+    probe_name              = "ascs"
+    protocol                = "Tcp"
+    frontend_port           = 3901
+    backend_port            = 3901
+    enable_floating_ip      = false
+    idle_timeout_in_minutes = 4
+    load_distribution       = "SourceIPProtocol"
+    enable_tcp_reset        = false
+    disable_outbound_snat   = true
+  },
+  {
+    name                    = "port_8101"
+    frontend_name           = "ascs"
+    probe_name              = "ascs"
+    protocol                = "Tcp"
+    frontend_port           = 8101
+    backend_port            = 8101
+    enable_floating_ip      = false
+    idle_timeout_in_minutes = 4
+    load_distribution       = "SourceIPProtocol"
+    enable_tcp_reset        = false
+    disable_outbound_snat   = true
+  },
+  {
+    name                    = "port_50113"
+    frontend_name           = "ascs"
+    probe_name              = "ascs"
+    protocol                = "Tcp"
+    frontend_port           = 50113
+    backend_port            = 50113
+    enable_floating_ip      = false
+    idle_timeout_in_minutes = 4
+    load_distribution       = "SourceIPProtocol"
+    enable_tcp_reset        = false
+    disable_outbound_snat   = true
+  },
+  {
+    name                    = "port_50114"
+    frontend_name           = "ascs"
+    probe_name              = "ascs"
+    protocol                = "Tcp"
+    frontend_port           = 50114
+    backend_port            = 50114
+    enable_floating_ip      = false
+    idle_timeout_in_minutes = 4
+    load_distribution       = "SourceIPProtocol"
+    enable_tcp_reset        = false
+    disable_outbound_snat   = true
+  },
+  {
+    name                    = "port_50116"
+    frontend_name           = "ascs"
+    probe_name              = "ascs"
+    protocol                = "Tcp"
+    frontend_port           = 50116
+    backend_port            = 50116
+    enable_floating_ip      = false
+    idle_timeout_in_minutes = 4
+    load_distribution       = "SourceIPProtocol"
+    enable_tcp_reset        = false
+    disable_outbound_snat   = true
+  },
+  {
+    name                    = "port_3210"
+    frontend_name           = "ers"
+    probe_name              = "ers"
+    protocol                = "Tcp"
+    frontend_port           = 3210
+    backend_port            = 3210
+    enable_floating_ip      = false
+    idle_timeout_in_minutes = 4
+    load_distribution       = "SourceIPProtocol"
+    enable_tcp_reset        = false
+    disable_outbound_snat   = true
+  },
+  {
+    name                    = "port_3310"
+    frontend_name           = "ers"
+    probe_name              = "ers"
+    protocol                = "Tcp"
+    frontend_port           = 3310
+    backend_port            = 3310
+    enable_floating_ip      = false
+    idle_timeout_in_minutes = 4
+    load_distribution       = "SourceIPProtocol"
+    enable_tcp_reset        = false
+    disable_outbound_snat   = true
+  },
+  {
+    name                    = "port_51013"
+    frontend_name           = "ers"
+    probe_name              = "ers"
+    protocol                = "Tcp"
+    frontend_port           = 51013
+    backend_port            = 51013
+    enable_floating_ip      = false
+    idle_timeout_in_minutes = 4
+    load_distribution       = "SourceIPProtocol"
+    enable_tcp_reset        = false
+    disable_outbound_snat   = true
+  },
+  {
+    name                    = "port_51014"
+    frontend_name           = "ers"
+    probe_name              = "ers"
+    protocol                = "Tcp"
+    frontend_port           = 51014
+    backend_port            = 51014
+    enable_floating_ip      = false
+    idle_timeout_in_minutes = 4
+    load_distribution       = "SourceIPProtocol"
+    enable_tcp_reset        = false
+    disable_outbound_snat   = true
+  },
+  {
+    name                    = "port_51016"
+    frontend_name           = "ers"
+    probe_name              = "ers"
+    protocol                = "Tcp"
+    frontend_port           = 51016
+    backend_port            = 51016
+    enable_floating_ip      = false
+    idle_timeout_in_minutes = 4
+    load_distribution       = "SourceIPProtocol"
+    enable_tcp_reset        = false
+    disable_outbound_snat   = true
+  },
+]
+
+
+#############################
+# Load balancer for outbound
+#############################
+lb_out_create = false
+lb_out_name   = "lb_outbound_sap"
+lb_out_sku    = "Standard"
+
+
+##############
+# NAT Gateway
+##############
+nat_gateway_enabled        = false
+nat_gateway_exists         = false
+nat_gateway_rg             = "RG_SAP_HA"
+nat_gateway_name           = "nat-gw"
+nat_gateway_pub_ip_persist = true
+nat_gateway_sku            = "Standard"
+nat_gateway_idle_timeout   = 10
+nat_gateway_zones          = ["1"]
+
+
+######
+# VMs
+######
+vms = [
+  {
+    name  = "sap-ecp-1"
+    size  = "Standard_D2as_v5"
+    image = {
+      publisher = "SUSE"
+      offer     = "sles-sap-12-sp5-byos"
+      sku       = "gen2"
+      version   = "latest"
+    }
+    add_pub_ip         = true
+    pub_ip_persist     = true
+    priv_ip_dynamic    = false
+    priv_ip_addr       = "10.10.1.202"
+    add_boot_diag      = true
+    disk_type          = "Standard_LRS"
+    disk_size_gb       = 20
+    add_extra_disk     = false
+    extra_disk_size_gb = 0
+    net_accel          = true
+    cloudinit          = "files/cloud-init-sap-netweaver-ha.yaml"
+    swap_size          = 2048
+    os_registration    = true
+    reg_code           = "SUSE-REG-CODE-HERE"
+    reg_email          = "suse@suse.com"
+    product_id         = "NW750.HDB.ABAPHA"
+    saptune_solution   = "NETWEAVER"
+    sap_instance       = "ascs"
+  },
+  {
+    name  = "sap-ecp-2"
+    size  = "Standard_D2as_v5"
+    image = {
+      publisher = "SUSE"
+      offer     = "sles-sap-12-sp5-byos"
+      sku       = "gen2"
+      version   = "latest"
+    }
+    add_pub_ip         = true
+    pub_ip_persist     = true
+    priv_ip_dynamic    = false
+    priv_ip_addr       = "10.10.1.203"
+    add_boot_diag      = true
+    disk_type          = "Standard_LRS"
+    disk_size_gb       = 20
+    add_extra_disk     = false
+    extra_disk_size_gb = 0
+    net_accel          = true
+    cloudinit          = "files/cloud-init-sap-netweaver-ha.yaml"
+    swap_size          = 2048
+    os_registration    = true
+    reg_code           = "SUSE-REG-CODE-HERE"
+    reg_email          = "suse@suse.com"
+    product_id         = "NW750.HDB.ABAPHA"
+    saptune_solution   = "NETWEAVER"
+    sap_instance       = "ers"
+  },
+]
+
+
+################
+# SAP variables
+################
+# ASCS
+sap_ascs_instance_sid  = "ECP"
+sap_ascs_instance_id   = "01"
+sap_ascs_root_user     = "root"
+sap_ascs_root_password = "Passw0rd123"
+sap_ascs_vip_address   = "10.10.1.200"
+sap_ascs_vip_hostname  = "ecp-ascs-vip"
+
+
+######
+# ERS
+######
+sap_ers_instance_sid  = "ECP"
+sap_ers_instance_id   = "10"
+sap_ers_root_user     = "root"
+sap_ers_root_password = "Passw0rd123"
+sap_ers_vip_address   = "10.10.1.201"
+sap_ers_vip_hostname  = "ecp-ers-vip"
+
+
+#######
+# MISC
+#######
+sid_adm_password  = "Passw0rd123"
+sap_adm_password  = "Passw0rd123"
+master_password   = "Passw0rd123"
+sapmnt_path       = "/sapmnt"
+sidadm_user_uid   = "1001"
+sidadm_user_gid   = "1001"
+sapmnt_inst_media = ""
+swpm_folder       = "/mnt/sapmedia/swpm_"
+sapexe_folder     = "/mnt/sapmedia/kernel_novo/part1"
+additional_dvds   = "/mnt/sapmedia/misc"
+
+
+#######
+# HANA
+#######
+sap_hana_host     = "hana"
+sap_hana_ip       = "52.188.167.205"
+sap_hana_sid      = "ECP"
+sap_hana_instance = "00"
+sap_hana_password = "Password123"
+
+
+#############
+# HA Cluster
+#############
+cluster_install  = true
+cluster_unicast  = true
+cluster_password = "Passw0rd"
+
+
+#################
+# SAP Monitoring
+#################
+enable_monitoring = true
+
+
+###############
+# NetApp Files
+###############
+netapp_files_enabled        = false
+netapp_files_exists         = false
+netapp_files_rg             = "RG_SAP_HA"
+netapp_account_name         = "stg-netapp-files"
+netapp_pool_exists          = false
+netapp_pool_name            = "netapp-pool"
+netapp_pool_service_level   = "Premium"
+netapp_pool_size            = 4
+netapp_volume_exists        = false
+netapp_volume_name          = "netapp-volume"
+netapp_volume_path          = "sap-volume-path"
+netapp_volume_service_level = "Premium"
+netapp_volume_protocols     = ["NFSv4.1"]
+netapp_volume_quota_in_gb   = 500
+
+
+#######
+# Tags
+#######
+tags = {
+  Funcao: "SAP_HA"
+  Ambiente: "Producao"
+  Cenario: "SAP"
+  Projeto: "ECC (PAS)"
+}
