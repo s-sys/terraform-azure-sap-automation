@@ -1,0 +1,122 @@
+# cloud-config
+resize_rootfs: true
+
+write_files:
+- content: |
+    vm_number=${vm_number}
+    vm_name=${vm_name}
+    vm_names="${vm_names}"
+    vm_ip=${vm_ip}
+    vm_ips="${vm_ips}"
+    vm_ip_network=${vm_ip_network}
+    vm_swap_size="${vm_swap_size}"
+    vm_os_registration=${vm_os_registration}
+    vm_reg_code="${vm_reg_code}"
+    vm_reg_email="${vm_reg_email}"
+    vm_product_id="${vm_product_id}"
+    vm_saptune_solution="${vm_saptune_solution}"
+    vm_sap_instance="${vm_sap_instance}"
+    admin_password="${admin_password}"
+    sap_media_stg_enabled=${sap_media_stg_enabled}
+    sap_media_stg_type="${sap_media_stg_type}"
+    sap_media_stg_account="${sap_media_stg_account}"
+    sap_media_local_mount="${sap_media_local_mount}"
+    sap_media_stg_remote_path="${sap_media_stg_remote_path}"
+    sap_media_stg_access_key="${sap_media_stg_access_key}"
+    sap_media_local_add_fstab="${sap_media_local_add_fstab}"
+    sap_media_pe_private_ip="${sap_media_pe_private_ip}"
+    data_stg_enabled=${data_stg_enabled}
+    data_stg_account="${data_stg_account}"
+    data_stg_remote_path="${data_stg_remote_path}"
+    data_stg_remote_clean="${data_stg_remote_clean}"
+    data_stg_local_add_fstab="${data_stg_local_add_fstab}"
+    data_stg_pe_private_ip="${data_stg_pe_private_ip}"
+    saptrans_stg_enabled=${saptrans_stg_enabled}
+    saptrans_stg_type="${saptrans_stg_type}"
+    saptrans_stg_account="${saptrans_stg_account}"
+    saptrans_stg_remote_path="${saptrans_stg_remote_path}"
+    saptrans_stg_remote_clean="${saptrans_stg_remote_clean}"
+    saptrans_stg_local_add_fstab="${saptrans_stg_local_add_fstab}"
+    saptrans_stg_pe_private_ip="${saptrans_stg_pe_private_ip}"
+    enable_monitoring=${enable_monitoring}
+    cluster_install=${cluster_install}
+    cluster_unicast=${cluster_unicast}
+    cluster_password=${cluster_password}
+    subscription_id=${subscription_id}
+    resource_group=${resource_group}
+    tenant_id=${tenant_id}
+    login_id=${login_id}
+    app_password=${app_password}
+    sap_ascs_instance_sid=${sap_ascs_instance_sid}
+    sap_ascs_instance_id=${sap_ascs_instance_id}
+    sap_ascs_root_user=${sap_ascs_root_user}
+    sap_ascs_root_password=${sap_ascs_root_password}
+    sap_ascs_vip_address=${sap_ascs_vip_address}
+    sap_ascs_vip_hostname=${sap_ascs_vip_hostname}
+    sap_ers_instance_sid=${sap_ers_instance_sid}
+    sap_ers_instance_id=${sap_ers_instance_id}
+    sap_ers_root_user=${sap_ers_root_user}
+    sap_ers_root_password=${sap_ers_root_password}
+    sap_ers_vip_address=${sap_ers_vip_address}
+    sap_ers_vip_hostname=${sap_ers_vip_hostname}
+    sid_adm_password=${sid_adm_password}
+    sap_adm_password=${sap_adm_password}
+    master_password=${master_password}
+    sapmnt_path=${sapmnt_path}
+    sidadm_user_uid=${sidadm_user_uid}
+    sidadm_user_gid=${sidadm_user_gid}
+    sapmnt_inst_media=${sapmnt_inst_media}
+    swpm_folder=${swpm_folder}
+    sapexe_folder=${sapexe_folder}
+    additional_dvds=${additional_dvds}
+    sap_hana_host=${sap_hana_host}
+    sap_hana_ip=${sap_hana_ip}
+    sap_hana_sid=${sap_hana_sid}
+    sap_hana_instance=${sap_hana_instance}
+    sap_hana_password=${sap_hana_password}
+  path: /run/scripts/vars
+  owner: root:root
+  permissions: "0640"
+  append: false
+- encoding: gzip+base64
+  content: |
+    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
+  path: /run/scripts/setup_sap.sh
+  owner: root:root
+  permissions: "0755"
+  append: false
+
+runcmd:
+  - [bash, "/run/scripts/setup_sap.sh"]

@@ -116,7 +116,7 @@ variable "admin_password" {
 variable "availability_set_enabled" {
   description = "Set if Availability set should be used or not."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "availability_set_name" {
@@ -132,7 +132,7 @@ variable "availability_set_name" {
 variable "proximity_pg_enabled" {
   description = "Set if proximity placement group should be used or not."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "proximity_pg_exists" {
@@ -160,7 +160,7 @@ variable "proximity_pg_rg" {
 variable "sap_media_stg_enabled" {
   description = "Set if storage for SAP Media should be enabled or not."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "sap_media_stg_type" {
@@ -279,7 +279,7 @@ variable "sap_media_stg_pe_name" {
 variable "data_stg_enabled" {
   description = "Set if storage for SAP data should be enabled or not."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "data_stg_exists" {
@@ -388,7 +388,7 @@ variable "data_stg_pe_name" {
 variable "saptrans_stg_enabled" {
   description = "Set if storage for SAP trans should be enabled or not."
   type        = bool
-  default     = true
+  default     = false
 }
 
 
@@ -516,7 +516,7 @@ variable "saptrans_stg_pe_name" {
 variable "vm_data_stg_exists" {
   description = "Set if storage account for data exists or if one should be created."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "vm_data_stg_account" {
@@ -576,7 +576,7 @@ variable "vm_data_stg_account_kind" {
 variable "boot_diag_stg_enabled" {
   description = "Set if storage account for boot diagnostics should be enabled or not."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "boot_diag_stg_exists" {
@@ -760,13 +760,13 @@ variable "nsg_rules" {
 variable "lb_create" {
   description = "Set if load balancer should be created."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "lb_create_public_ip" {
   description = "Set if public IP should be attached to the load balancer."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "lb_name" {
@@ -788,6 +788,10 @@ variable "lb_frontend_ip" {
     private_ip = string
     })
   )
+  default      = [{
+    name       = "lb"
+    private_ip = "10.0.0.1"
+  }]
 }
 
 variable "lb_probe_rules" {
@@ -801,6 +805,14 @@ variable "lb_probe_rules" {
     number_of_probes = number
     })
   )
+
+  default            = [{
+    name             = ""
+    port             = 0
+    protocol         = "Tcp"   
+    interval         = 5       
+    number_of_probes = 2       
+  }]
 
   validation {
     condition     = alltrue([
@@ -848,6 +860,20 @@ variable "lb_rules" {
     disable_outbound_snat   = bool
     })
   )
+
+  default                   = [{
+    name                    = "rule01"
+    frontend_name           = "frontend"
+    probe_name              = "name"
+    protocol                = "Tcp"
+    frontend_port           = 1000
+    backend_port            = 1000
+    enable_floating_ip      = false
+    idle_timeout_in_minutes = 4
+    load_distribution       = "SourceIPProtocol"
+    enable_tcp_reset        = false
+    disable_outbound_snat   = true
+  }]
 
   validation {
     condition     = alltrue([
@@ -977,7 +1003,7 @@ variable "nat_gateway_zones" {
 variable "fencing_enabled" {
   description = "Set if fencing should be enabled or not."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "fencing_app_exists" {

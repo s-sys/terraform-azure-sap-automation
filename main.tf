@@ -8,7 +8,6 @@ terraform {
       version = "~>3.0"
     }
   }
-  experiments = [module_variable_optional_attrs]
 }
 
 
@@ -294,8 +293,8 @@ resource "azurerm_subnet" "subnet" {
                          )
   address_prefixes     = [var.subnet_addr]
   service_endpoints    = ["Microsoft.Storage"]
-  enforce_private_link_endpoint_network_policies = true
-  enforce_private_link_service_network_policies  = true
+  private_endpoint_network_policies_enabled     = true
+  private_link_service_network_policies_enabled = true
 }
 
 
@@ -961,7 +960,7 @@ resource "azurerm_storage_account_network_rules" "stg_sap_media_network_rules" {
   storage_account_id         = azurerm_storage_account.stg_sap_media[0].id
   default_action             = "Deny"
   bypass                     = ["AzureServices"]
-  ip_rules                   = [chomp(data.http.stg_sap_media_get_pub_ip[0].body)]
+  ip_rules                   = [chomp(data.http.stg_sap_media_get_pub_ip[0])]
   virtual_network_subnet_ids = [(
                                   var.subnet_exists == true
                                   ? data.azurerm_subnet.subnet[0].id
@@ -1070,7 +1069,7 @@ resource "azurerm_storage_account_network_rules" "stg_data_network_rules" {
   storage_account_id         = azurerm_storage_account.stg_data[0].id
   default_action             = "Deny"
   bypass                     = ["AzureServices"]
-  ip_rules                   = [chomp(data.http.stg_data_get_pub_ip[0].body)]
+  ip_rules                   = [chomp(data.http.stg_data_get_pub_ip[0])]
   virtual_network_subnet_ids = [(
                                   var.subnet_exists == true
                                   ? data.azurerm_subnet.subnet[0].id
@@ -1170,7 +1169,7 @@ resource "azurerm_storage_account_network_rules" "stg_saptrans_network_rules" {
   storage_account_id         = azurerm_storage_account.stg_saptrans[0].id
   default_action             = "Deny"
   bypass                     = ["AzureServices"]
-  ip_rules                   = [chomp(data.http.stg_saptrans_get_pub_ip[0].body)]
+  ip_rules                   = [chomp(data.http.stg_saptrans_get_pub_ip[0])]
   virtual_network_subnet_ids = [(
                                   var.subnet_exists == true
                                   ? data.azurerm_subnet.subnet[0].id
